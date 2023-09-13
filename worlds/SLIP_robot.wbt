@@ -1,0 +1,151 @@
+#VRML_SIM R2023b utf8
+
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/objects/backgrounds/protos/TexturedBackground.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/objects/backgrounds/protos/TexturedBackgroundLight.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/objects/floors/protos/Floor.proto"
+
+WorldInfo {
+  basicTimeStep 2
+  contactProperties [
+    ContactProperties {
+      frictionRotation 0.5 0
+    }
+  ]
+}
+Viewpoint {
+  orientation 0.13502981148119209 0.13223345648774382 -0.981978239573901 1.6098781568825387
+  position 1.2237094217242512 14.593573391489432 3.975089142832914
+}
+TexturedBackground {
+}
+TexturedBackgroundLight {
+}
+Floor {
+}
+Robot {
+  translation 0 0 2
+  children [
+    DEF body Shape {
+      appearance Appearance {
+        material Material {
+          diffuseColor 0.146731 0.275822 0.837415
+        }
+      }
+      geometry Cylinder {
+        height 0.05
+      }
+    }
+    GPS {
+    }
+    InertialUnit {
+      name "imu"
+    }
+    SliderJoint {
+      jointParameters JointParameters {
+        position -1.999600041102667e-08
+        maxStop 1
+        dampingConstant 10
+        staticFriction 0.2
+      }
+      device [
+        PositionSensor {
+          name "leg_length_sensor"
+        }
+        LinearMotor {
+          name "leg_motor"
+          maxForce 1800
+        }
+      ]
+      endPoint Solid {
+        translation 0 0 -1.999600041102667e-08
+        children [
+          HingeJoint {
+            jointParameters HingeJointParameters {
+              axis 0 1 0
+            }
+            device [
+              RotationalMotor {
+                name "leg_joint_0"
+                maxTorque 1800
+              }
+              PositionSensor {
+                name "joint_sensor_0"
+              }
+            ]
+            endPoint Solid {
+              translation 0 0 -0.2
+              rotation 0 1 0 0
+              children [
+                TouchSensor {
+                  translation 0 0 -1
+                  children [
+                    DEF foot Shape {
+                      appearance PBRAppearance {
+                      }
+                      geometry Sphere {
+                        radius 0.1
+                      }
+                    }
+                  ]
+                  name "touch_sensor"
+                  boundingObject USE foot
+                  physics Physics {
+                    density -1
+                    mass 0.01
+                  }
+                }
+                DEF leg_body Shape {
+                  appearance Appearance {
+                    material Material {
+                      diffuseColor 0.837415 0.212253 0.277058
+                    }
+                  }
+                  geometry Capsule {
+                    radius 0.05
+                  }
+                }
+              ]
+              boundingObject USE leg_body
+              physics Physics {
+                density -1
+                mass 0.1
+              }
+            }
+          }
+          DEF hip_body Shape {
+            appearance Appearance {
+              material Material {
+                diffuseColor 0.785916 0.837415 0.0599374
+              }
+            }
+            geometry Cylinder {
+              height 0.2
+              radius 0.1
+            }
+          }
+        ]
+        name "leg"
+        boundingObject USE hip_body
+        physics Physics {
+          density -1
+          mass 0.1
+        }
+      }
+    }
+  ]
+  boundingObject DEF body Shape {
+    appearance Appearance {
+      material Material {
+        diffuseColor 0.146731 0.275822 0.837415
+      }
+    }
+    geometry Cylinder {
+      height 0.05
+    }
+  }
+  physics Physics {
+    density -1
+    mass 20
+  }
+  controller "<extern>"
+}
